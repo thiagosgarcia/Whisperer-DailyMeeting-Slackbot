@@ -3,17 +3,19 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Whisperer.DependencyResolution;
 using Whisperer.Models;
-
+using Whisperer.Service.Commands;
 using ConfigurationModel = Whisperer.Models.Configuration;
 namespace Whisperer.Service
 {
     public class PostBackService : IPostBackService
     {
         private readonly Configuration _configuration;
+        private readonly MatchCommand _matchCommand;
 
         public PostBackService()
         {
             _configuration = Ioc.Container.GetInstance<Configuration>();
+            _matchCommand = Ioc.Container.GetInstance<MatchCommand>();
         }
         public async Task<string> Ping()
         {
@@ -29,12 +31,7 @@ namespace Whisperer.Service
             if (data.token != _configuration.GetIncomingToken())
                 throw new Exception();
 
-            if (data.text.StartsWith("ping"))
-            {
-                return Pong();
-            }
-
-            return null;
+            return await _matchCommand.TryMatch(data.text)?.Action(data);
         }
 
         private CustomOutgoingPostData Pong()
@@ -45,6 +42,6 @@ namespace Whisperer.Service
                 icon_emoji = ":table_tennis_paddle_and_ball:",
                 username = "Whisperer Bot"
             };
-    }
+        }
     }
 }

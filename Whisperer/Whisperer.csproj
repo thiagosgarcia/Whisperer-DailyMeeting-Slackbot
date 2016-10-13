@@ -215,6 +215,11 @@
       <DependentUpon>201610130112074_FirstMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Service\Commands\_AbstractCommand.cs" />
+    <Compile Include="Service\Commands\HelpCommand.cs" />
+    <Compile Include="Service\Commands\_MatchCommand.cs" />
+    <Compile Include="Service\Commands\ConfigCommand.cs" />
+    <Compile Include="Service\Commands\PingCommand.cs" />
     <Compile Include="Models\PostDataModels.cs" />
     <Compile Include="Models\Models.cs" />
     <Compile Include="Persistence\BaseRepository.cs" />
@@ -255,6 +260,9 @@
     <Content Include="connections.config" />
     <None Include="Project_Readme.html" />
     <None Include="Properties\PublishProfiles\WebDeploy.pubxml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Service\CommandMessages\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

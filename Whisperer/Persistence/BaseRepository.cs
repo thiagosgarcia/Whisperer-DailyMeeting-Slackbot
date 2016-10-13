@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Data.Entity;
 using System.Linq;
+using System.Threading.Tasks;
 using Whisperer.Models;
+using Whisperer.Persistence;
 
 namespace MegaStore.Persistence
 {
@@ -32,7 +34,7 @@ namespace MegaStore.Persistence
             lock (Locker)
             {
                 var item = Context.Set<T>().Add(entity);
-                Save();
+                SaveAsync();
                 return item;
             }
         }
@@ -46,7 +48,7 @@ namespace MegaStore.Persistence
                 {
                     list.Add(Add(item));
                 }
-                Save();
+                SaveAsync();
                 return list;
             }
         }
@@ -75,7 +77,7 @@ namespace MegaStore.Persistence
                         returnItem = item.Entity;
                     }
                 }
-                Save();
+                SaveAsync();
                 return returnItem;
             }
         }
@@ -85,7 +87,7 @@ namespace MegaStore.Persistence
             lock (Locker)
             {
                 Context.Set<T>().Remove(entity);
-                Save();
+                SaveAsync();
             }
             return true;
         }
@@ -102,11 +104,11 @@ namespace MegaStore.Persistence
             }
         }
 
-        public int Save()
+        public Task<int> SaveAsync()
         {
             lock (Locker)
             {
-                return Context.SaveChanges();
+                return Context.SaveChangesAsync();
             }
         }
 

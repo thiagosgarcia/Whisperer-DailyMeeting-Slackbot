@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Whisperer.Models;
 
-namespace MegaStore.Persistence
+namespace Whisperer.Persistence
 {
     public interface IBaseRepository<T> : IDisposable
         where T : Entity
@@ -13,6 +14,6 @@ namespace MegaStore.Persistence
         T Update(T entity);
         bool Delete(T entity);
         bool Delete(int id);
-        int Save();
+        Task<int> SaveAsync();
     }
 }

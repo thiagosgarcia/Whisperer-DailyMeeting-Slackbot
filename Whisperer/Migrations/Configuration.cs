@@ -1,8 +1,3 @@
-using System.Collections.Generic;
-using System.IO;
-using Newtonsoft.Json;
-using Whisperer.DependencyResolution;
-using Whisperer.Service;
 using ConfigurationModel = Whisperer.Models.Configuration;
 namespace Whisperer.Migrations
 {
@@ -12,7 +7,7 @@ namespace Whisperer.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationsEnabled = false;
         }
 
         protected override void Seed(AppContext context)
