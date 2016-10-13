@@ -1,0 +1,8 @@
+{
+	"PayloadUrl": "<anyurl>",
+	"DailyMeetingTime": 780,
+	"OfficeHoursBegin": 600,
+	"OfficeHoursEnd": 1140,
+	"OutgoingToken": "<incoming_token from slack>",
+	"IncomingToken": "<outgoing_token from slack>"
+}
