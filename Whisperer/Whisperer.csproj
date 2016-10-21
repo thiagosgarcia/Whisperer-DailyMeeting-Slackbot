@@ -214,7 +214,12 @@
     <Compile Include="Migrations\201610130112074_FirstMigration.Designer.cs">
       <DependentUpon>201610130112074_FirstMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201610210213413_AppTokenSupport.cs" />
+    <Compile Include="Migrations\201610210213413_AppTokenSupport.Designer.cs">
+      <DependentUpon>201610210213413_AppTokenSupport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Service\Commands\EmptyCommand.cs" />
     <Compile Include="Service\Commands\_AbstractCommand.cs" />
     <Compile Include="Service\Commands\HelpCommand.cs" />
     <Compile Include="Service\Commands\_MatchCommand.cs" />
@@ -228,6 +233,8 @@
     <Compile Include="Persistence\NotTrackedRepository.cs" />
     <Compile Include="Service\Configuration.cs" />
     <Compile Include="Service\IPostBackService.cs" />
+    <Compile Include="Service\Job\DailyJob.cs" />
+    <Compile Include="Service\UserService.cs" />
     <Compile Include="Service\ReadOnlyService.cs" />
     <Compile Include="Service\PostBackService.cs" />
     <Compile Include="Persistence\Repository.cs" />
@@ -251,6 +258,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201610130112074_FirstMigration.resx">
       <DependentUpon>201610130112074_FirstMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201610210213413_AppTokenSupport.resx">
+      <DependentUpon>201610210213413_AppTokenSupport.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

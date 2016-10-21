@@ -25,7 +25,7 @@ namespace Whisperer.Service.Commands
                 }
             }
 
-            return null;
+            return Ioc.Container.GetInstance<EmptyCommand>();
         }
     }
 }

@@ -17,6 +17,16 @@ namespace Whisperer.Service
             return _service.Get(1).IncomingToken;
         }
 
+        public string GetOutgoingToken()
+        {
+            return _service.Get(1).OutgoingToken;
+        }
+
+        public string GetAppToken()
+        {
+            return _service.Get(1).AppToken;
+        }
+
         public string GetPayloadUrl()
         {
             return _service.Get(1).PayloadUrl;

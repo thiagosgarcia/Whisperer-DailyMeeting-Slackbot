@@ -5,6 +5,7 @@ using StructureMap;
 using StructureMap.Pipeline;
 using Whisperer.Models;
 using Whisperer.Service;
+using Whisperer.Service.Job;
 using ConfigurationModel = Whisperer.Models.Configuration;
 using ConfigurationService = Whisperer.Service.Configuration;
 
@@ -17,6 +18,8 @@ namespace Whisperer.DependencyResolution
         {
             Container = new Container(x =>
             {
+                x.For(typeof(DailyJob)).LifecycleIs(Lifecycles.Singleton);
+
                 x.For(typeof(AppContext)).LifecycleIs(Lifecycles.Transient);
                 x.For<DbContext>().LifecycleIs(Lifecycles.Transient).Use<AppContext>();
 

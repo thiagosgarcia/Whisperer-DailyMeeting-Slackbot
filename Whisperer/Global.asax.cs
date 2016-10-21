@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -7,6 +8,7 @@ using System.Web.Routing;
 using Newtonsoft.Json;
 using Whisperer.DependencyResolution;
 using Whisperer.Service;
+using Whisperer.Service.Job;
 using ConfigurationModel = Whisperer.Models.Configuration;
 
 namespace Whisperer
@@ -23,6 +25,7 @@ namespace Whisperer
 
             Ioc.Initialize();
             UpdateConfiguration();
+            StartJob();
         }
 
         private void UpdateConfiguration()
@@ -41,6 +44,11 @@ namespace Whisperer
                 var json = r.ReadToEnd();
                 return JsonConvert.DeserializeObject<ConfigurationModel>(json);
             }
+        }
+
+        private async void StartJob()
+        {
+            Ioc.Container.GetInstance<DailyJob>().Start();
         }
     }
 }

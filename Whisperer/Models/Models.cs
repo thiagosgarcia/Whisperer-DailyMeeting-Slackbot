@@ -9,6 +9,7 @@ namespace Whisperer.Models
         public short DailyMeetingTime { get; set; }
         public string IncomingToken { get; set; }
         public string OutgoingToken { get; set; }
+        public string AppToken { get; set; }
         public string PayloadUrl { get; set; }
         public string Language { get; set; }
     }
