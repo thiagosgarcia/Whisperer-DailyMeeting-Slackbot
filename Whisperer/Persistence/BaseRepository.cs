@@ -34,7 +34,7 @@ namespace MegaStore.Persistence
             lock (Locker)
             {
                 var item = Context.Set<T>().Add(entity);
-                SaveAsync();
+                Save();
                 return item;
             }
         }
@@ -48,7 +48,7 @@ namespace MegaStore.Persistence
                 {
                     list.Add(Add(item));
                 }
-                SaveAsync();
+                Save();
                 return list;
             }
         }
@@ -77,7 +77,7 @@ namespace MegaStore.Persistence
                         returnItem = item.Entity;
                     }
                 }
-                SaveAsync();
+                Save();
                 return returnItem;
             }
         }
@@ -87,7 +87,7 @@ namespace MegaStore.Persistence
             lock (Locker)
             {
                 Context.Set<T>().Remove(entity);
-                SaveAsync();
+                Save();
             }
             return true;
         }
@@ -104,11 +104,11 @@ namespace MegaStore.Persistence
             }
         }
 
-        public Task<int> SaveAsync()
+        public int Save()
         {
             lock (Locker)
             {
-                return Context.SaveChangesAsync();
+                return Context.SaveChanges();
             }
         }
 

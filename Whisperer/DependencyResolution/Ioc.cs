@@ -36,6 +36,7 @@ namespace Whisperer.DependencyResolution
                 x.For<IService<Team>> ().Use<BaseService<Team>> ();
                 x.For<IService<Channel>>().Use<BaseService<Channel>>();
                 x.For<IService<User>>().Use<BaseService<User>>();
+                x.For<IUserService>().Use<UserService>();
 
                 x.For<IRepository<ConfigurationModel>>().Use<NotTrackedRepository<ConfigurationModel, AppContext>>();
                 x.For<IService<ConfigurationModel>>().Use<BaseService<ConfigurationModel>>();

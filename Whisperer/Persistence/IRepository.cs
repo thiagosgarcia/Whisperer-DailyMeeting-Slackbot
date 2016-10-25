@@ -8,6 +8,6 @@ namespace MegaStore.Persistence
     public interface IRepository<T> : IBaseRepository<T>
         where T : Entity
     {
-        IEnumerable<T> Items { get; }
+        IQueryable<T> Items { get; }
     }
 }

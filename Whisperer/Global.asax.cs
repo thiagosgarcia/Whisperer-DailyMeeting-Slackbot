@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Newtonsoft.Json;
+using Whisperer.App_Start;
 using Whisperer.DependencyResolution;
 using Whisperer.Service;
 using Whisperer.Service.Job;
@@ -24,6 +25,8 @@ namespace Whisperer
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             Ioc.Initialize();
+            Mapper.Initialize();
+
             UpdateConfiguration();
             StartJob();
         }

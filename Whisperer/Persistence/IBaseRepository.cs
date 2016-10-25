@@ -14,6 +14,6 @@ namespace Whisperer.Persistence
         T Update(T entity);
         bool Delete(T entity);
         bool Delete(int id);
-        Task<int> SaveAsync();
+        int Save();
     }
 }

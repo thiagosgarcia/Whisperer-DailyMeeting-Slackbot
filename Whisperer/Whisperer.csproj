@@ -202,6 +202,7 @@
     <Compile Include="App_Start\AppContext.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\AutomapperConfiguration.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ListenController.cs" />
@@ -233,6 +234,7 @@
     <Compile Include="Persistence\NotTrackedRepository.cs" />
     <Compile Include="Service\Configuration.cs" />
     <Compile Include="Service\IPostBackService.cs" />
+    <Compile Include="Service\IUserService.cs" />
     <Compile Include="Service\Job\DailyJob.cs" />
     <Compile Include="Service\UserService.cs" />
     <Compile Include="Service\ReadOnlyService.cs" />

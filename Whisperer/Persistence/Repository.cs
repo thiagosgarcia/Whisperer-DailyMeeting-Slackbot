@@ -14,7 +14,7 @@ namespace MegaStore.Persistence
         {
         }
 
-        public IEnumerable<T> Items { get { lock (Locker) { return Context.Set<T>(); } } }
+        public IQueryable<T> Items { get { lock (Locker) { return Context.Set<T>(); } } }
 
     }
 }

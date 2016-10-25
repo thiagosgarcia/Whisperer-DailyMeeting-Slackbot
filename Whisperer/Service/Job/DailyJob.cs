@@ -12,12 +12,12 @@ namespace Whisperer.Service.Job
     public class DailyJob
     {
         private Configuration _configuration;
-        private UserService _userService;
+        private IUserService _userService;
 
         public DailyJob()
         {
             _configuration = Ioc.Container.GetInstance<Configuration>();
-            _userService = Ioc.Container.GetInstance<UserService>();
+            _userService = Ioc.Container.GetInstance<IUserService>();
         }
         public async void Start()
         {
@@ -36,14 +36,9 @@ namespace Whisperer.Service.Job
                 }
                 finally
                 {
-                    Thread.Sleep(1000 * 60 * 5);
+                    Thread.Sleep(1000 /* * 60*/ * 5);
                 }
             }
-        }
-
-        public async Task<Channel> GetChannelInfo()
-        {
-            return null;
         }
 
         public async Task<IEnumerable<ApiUser>> GetActiveUsers()
@@ -52,9 +47,15 @@ namespace Whisperer.Service.Job
             return u.members.Where(x => x.presence == "active");
         }
 
+        public async Task<Channel> GetChannelInfo()
+        {
+            //TODO continuar aqui
+            return null;
+        }
+
         public async Task<IEnumerable<ApiUser>> GetPendingUsersForChannel(IEnumerable<ApiUser> users, Channel channel)
         {
-            throw new NotImplementedException();
+            return null;
         }
 
         public async Task AskScrumQuestions(IEnumerable<ApiUser> users)
