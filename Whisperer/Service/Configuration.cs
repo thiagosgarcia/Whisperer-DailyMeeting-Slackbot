@@ -27,6 +27,11 @@ namespace Whisperer.Service
             return _service.Get(1).AppToken;
         }
 
+        public string GetDefaultChannel()
+        {
+            return _service.Get(1).DefaultChannel;
+        }
+
         public string GetPayloadUrl()
         {
             return _service.Get(1).PayloadUrl;

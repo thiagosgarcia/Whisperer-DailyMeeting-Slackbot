@@ -219,6 +219,10 @@
     <Compile Include="Migrations\201610210213413_AppTokenSupport.Designer.cs">
       <DependentUpon>201610210213413_AppTokenSupport.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611010223537_DefaultChannel.cs" />
+    <Compile Include="Migrations\201611010223537_DefaultChannel.Designer.cs">
+      <DependentUpon>201611010223537_DefaultChannel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Service\Commands\EmptyCommand.cs" />
     <Compile Include="Service\Commands\_AbstractCommand.cs" />
@@ -233,9 +237,11 @@
     <Compile Include="Persistence\IRepository.cs" />
     <Compile Include="Persistence\NotTrackedRepository.cs" />
     <Compile Include="Service\Configuration.cs" />
+    <Compile Include="Service\IChannelService.cs" />
     <Compile Include="Service\IPostBackService.cs" />
     <Compile Include="Service\IUserService.cs" />
     <Compile Include="Service\Job\DailyJob.cs" />
+    <Compile Include="Service\ChannelService.cs" />
     <Compile Include="Service\UserService.cs" />
     <Compile Include="Service\ReadOnlyService.cs" />
     <Compile Include="Service\PostBackService.cs" />
@@ -263,6 +269,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201610210213413_AppTokenSupport.resx">
       <DependentUpon>201610210213413_AppTokenSupport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611010223537_DefaultChannel.resx">
+      <DependentUpon>201611010223537_DefaultChannel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

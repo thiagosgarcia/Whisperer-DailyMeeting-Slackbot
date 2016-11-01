@@ -6,5 +6,6 @@
   "OutgoingToken": "<incoming_token from slack>",
   "IncomingToken": "<outgoing_token from slack>",
   "AppToken":  "<appToken>", 
+  "DefaultChannel":  "<channel name>", 
   "Language": "pt"
 }

@@ -10,6 +10,7 @@ namespace Whisperer.Models
         public string IncomingToken { get; set; }
         public string OutgoingToken { get; set; }
         public string AppToken { get; set; }
+        public string DefaultChannel { get; set; }
         public string PayloadUrl { get; set; }
         public string Language { get; set; }
     }

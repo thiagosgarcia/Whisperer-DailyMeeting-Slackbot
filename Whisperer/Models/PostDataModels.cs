@@ -68,15 +68,48 @@ namespace Whisperer.Models
     //token
     //presence (optional)
 
-    public class OutgoingUserParameters
+    public class OutgoingParameter
     {
         public string token { get; set; }
-        public byte presence { get; set; }
 
         public string toJson()
         {
             return Json.Encode(this);
         }
+
+    }
+
+    public class OutgoingChannelListParameters : OutgoingParameter
+    {
+        public byte exclude_archived { get; set; }
+
+        public IEnumerable<KeyValuePair<string, string>> ToPairs()
+        {
+            return new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("token", this.token),
+                new KeyValuePair<string, string>("exclude_archived", this.exclude_archived.ToString())
+            };
+        }
+    }
+
+    public class OutgoingChannelInfoParameters : OutgoingParameter
+    {
+        public string channel { get; set; }
+
+        public IEnumerable<KeyValuePair<string, string>> ToPairs()
+        {
+            return new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("token", this.token),
+                new KeyValuePair<string, string>("channel", this.channel)
+            };
+        }
+    }
+
+    public class OutgoingUserParameters : OutgoingParameter
+    {
+        public byte presence { get; set; }
 
         public IEnumerable<KeyValuePair<string, string>> ToPairs()
         {
@@ -136,7 +169,12 @@ namespace Whisperer.Models
 
     public class ChannelsList : ApiResponse
     {
-        public ApiChannel channels { get; set; }
+        public ApiChannel[] channels { get; set; }
+    }
+
+    public class ChannelInfo : ApiResponse
+    {
+        public ApiChannel channel { get; set; }
     }
     public class ApiChannel
     {
@@ -148,7 +186,7 @@ namespace Whisperer.Models
         public bool is_general { get; set; }
         public bool is_member { get; set; }
         public bool is_starred { get; set; }
-        public ApiUser[] members { get; set; }
+        public string[] members { get; set; }
         public ChannelParameter topic { get; set; }
         public ChannelParameter purpose { get; set; }
         public string last_read { get; set; }

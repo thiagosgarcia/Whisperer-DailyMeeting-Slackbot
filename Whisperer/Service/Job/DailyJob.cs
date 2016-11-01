@@ -13,11 +13,13 @@ namespace Whisperer.Service.Job
     {
         private Configuration _configuration;
         private IUserService _userService;
+        private IChannelService _channelService;
 
         public DailyJob()
         {
             _configuration = Ioc.Container.GetInstance<Configuration>();
             _userService = Ioc.Container.GetInstance<IUserService>();
+            _channelService = Ioc.Container.GetInstance<IChannelService>();
         }
         public async void Start()
         {
@@ -26,7 +28,7 @@ namespace Whisperer.Service.Job
                 try
                 {
                     var users = await GetActiveUsers();
-                    var channel = await GetChannelInfo();
+                    var channel = await GetDefaultChannelInfo();
                     users = await GetPendingUsersForChannel(users, channel);
                     await AskScrumQuestions(users);
                 }
@@ -47,14 +49,15 @@ namespace Whisperer.Service.Job
             return u.members.Where(x => x.presence == "active");
         }
 
-        public async Task<Channel> GetChannelInfo()
+        public async Task<ApiChannel> GetDefaultChannelInfo()
         {
-            //TODO continuar aqui
-            return null;
+            var channel =  await _channelService.GetChannelInfo();
+            return channel?.channel;
         }
 
-        public async Task<IEnumerable<ApiUser>> GetPendingUsersForChannel(IEnumerable<ApiUser> users, Channel channel)
+        public async Task<IEnumerable<ApiUser>> GetPendingUsersForChannel(IEnumerable<ApiUser> users, ApiChannel channel)
         {
+            //TODO continuar aqui
             return null;
         }
 
