@@ -14,12 +14,14 @@ namespace Whisperer.Service.Job
         private Configuration _configuration;
         private IUserService _userService;
         private IChannelService _channelService;
+        private IMeetingService _meetingService;
 
         public DailyJob()
         {
             _configuration = Ioc.Container.GetInstance<Configuration>();
             _userService = Ioc.Container.GetInstance<IUserService>();
             _channelService = Ioc.Container.GetInstance<IChannelService>();
+            _meetingService = Ioc.Container.GetInstance<IMeetingService>();
         }
         public async void Start()
         {
@@ -29,7 +31,8 @@ namespace Whisperer.Service.Job
                 {
                     var users = await GetActiveUsers();
                     var channel = await GetDefaultChannelInfo();
-                    users = await GetPendingUsersForChannel(users, channel);
+                    var meeting = await _meetingService.GetOrAddMeeting();
+                    users = await GetPendingUsersForChannel(users, channel, meeting);
                     await AskScrumQuestions(users);
                 }
                 catch (Exception ex)
@@ -55,7 +58,7 @@ namespace Whisperer.Service.Job
             return channel?.channel;
         }
 
-        public async Task<IEnumerable<ApiUser>> GetPendingUsersForChannel(IEnumerable<ApiUser> users, ApiChannel channel)
+        public async Task<IEnumerable<ApiUser>> GetPendingUsersForChannel(IEnumerable<ApiUser> users, ApiChannel channel, Meeting meeting)
         {
             //TODO continuar aqui
             return null;

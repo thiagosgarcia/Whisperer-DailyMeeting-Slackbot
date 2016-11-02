@@ -242,11 +242,13 @@
     <Compile Include="Persistence\NotTrackedRepository.cs" />
     <Compile Include="Service\Configuration.cs" />
     <Compile Include="Service\IChannelService.cs" />
+    <Compile Include="Service\IMeetingService.cs" />
     <Compile Include="Service\IPostBackService.cs" />
     <Compile Include="Service\IQuestionService.cs" />
     <Compile Include="Service\IUserService.cs" />
     <Compile Include="Service\Job\DailyJob.cs" />
     <Compile Include="Service\ChannelService.cs" />
+    <Compile Include="Service\MeetingService.cs" />
     <Compile Include="Service\QuestionService.cs" />
     <Compile Include="Service\UserService.cs" />
     <Compile Include="Service\ReadOnlyService.cs" />
