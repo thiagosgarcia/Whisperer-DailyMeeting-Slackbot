@@ -69,7 +69,7 @@ namespace Whisperer.Service
             AfterDelete?.Invoke(entity);
         }
 
-        public bool Delete(int id)
+        public bool Delete(long id)
         {
             return _repository.Delete(id);
         }

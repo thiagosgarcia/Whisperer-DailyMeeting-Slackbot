@@ -10,14 +10,14 @@ namespace Whisperer.Service
         T Add(T entity);
         T Update(T entity);
         bool Delete(T entity);
-        bool Delete(int id);
+        bool Delete(long id);
 
     }
     public interface IReadOnlyService<T>
         where T: Entity
     {
         IEnumerable<T> GetAll();
-        T Get(int id);
+        T Get(long id);
 
     }
 }

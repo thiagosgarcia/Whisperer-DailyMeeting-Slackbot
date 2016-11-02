@@ -21,7 +21,7 @@ namespace MegaStore.Service
             return _repository.Items.OrderBy(x => x.Id);
         }
 
-        public virtual T Get(int id)
+        public virtual T Get(long id)
         {
             return _repository.Items.SingleOrDefault(x => x.Id == id);
         }

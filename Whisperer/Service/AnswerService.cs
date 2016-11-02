@@ -17,24 +17,22 @@ using Whisperer.Service.Commands;
 using ConfigurationModel = Whisperer.Models.Configuration;
 namespace Whisperer.Service
 {
-    public class QuestionService : BaseService<Question>, IQuestionService
+    public class AnswerService : BaseService<Answer>, IAnswerService
     {
+        private IMeetingService _meetingService;
 
-        public QuestionService(IRepository<Question> repository) : base(repository)
+        public AnswerService(IRepository<Answer> repository) : base(repository)
         {
+            _meetingService = Ioc.Container.GetInstance<IMeetingService>();
         }
 
-        public async Task<IEnumerable<Question>> GetAll(bool? active)
+        public async Task<IEnumerable<Answer>> GetByMeeting(DateTime? date = null)
         {
-            if (!active.HasValue)
-                return GetAll();
-
-            return _repository.Items.Where(x => x.Active == active.Value);
+            return await GetByMeeting(await _meetingService.GetByDate(date));
         }
-
-        public Question GetByText(string text)
+        public async Task<IEnumerable<Answer>> GetByMeeting(Meeting meeting)
         {
-            return _repository.Items.FirstOrDefault(x => x.Text == text);
+            return _repository.Items.Where(x => x.Meeting.Id == meeting.Id);
         }
     }
 }

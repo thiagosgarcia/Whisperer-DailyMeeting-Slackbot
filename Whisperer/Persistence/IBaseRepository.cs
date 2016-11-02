@@ -8,12 +8,12 @@ namespace Whisperer.Persistence
     public interface IBaseRepository<T> : IDisposable
         where T : Entity
     {
-        T Get(int id);
+        T Get(long id);
         T Add(T entity);
         ICollection<T> Add(ICollection<T> entity);
         T Update(T entity);
         bool Delete(T entity);
-        bool Delete(int id);
+        bool Delete(long id);
         int Save();
     }
 }

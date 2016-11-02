@@ -28,7 +28,7 @@ namespace Whisperer.Service
             if (date == null)
                 date = DateTime.Today;
 
-            var meeting = _repository.Items.SingleOrDefault(x => x.Date == date);
+            var meeting = await GetByDate(date);
             if (meeting != null)
                 return meeting;
 
@@ -36,6 +36,11 @@ namespace Whisperer.Service
             {
                 Date = DateTime.Today
             });
+        }
+
+        public async Task<Meeting> GetByDate(DateTime? date = null)
+        {
+            return _repository.Items.SingleOrDefault(x => x.Date == date);
         }
     }
 }

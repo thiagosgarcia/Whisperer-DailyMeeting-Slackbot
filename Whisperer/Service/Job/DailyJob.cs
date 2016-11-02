@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
+using WebGrease.Css.Extensions;
 using Whisperer.DependencyResolution;
 using Whisperer.Models;
 
@@ -15,6 +16,8 @@ namespace Whisperer.Service.Job
         private IUserService _userService;
         private IChannelService _channelService;
         private IMeetingService _meetingService;
+        private IAnswerService _answerService;
+        private IQuestionService _questionService;
 
         public DailyJob()
         {
@@ -22,6 +25,8 @@ namespace Whisperer.Service.Job
             _userService = Ioc.Container.GetInstance<IUserService>();
             _channelService = Ioc.Container.GetInstance<IChannelService>();
             _meetingService = Ioc.Container.GetInstance<IMeetingService>();
+            _answerService = Ioc.Container.GetInstance<IAnswerService>();
+            _questionService = Ioc.Container.GetInstance<IQuestionService>();
         }
         public async void Start()
         {
@@ -54,14 +59,30 @@ namespace Whisperer.Service.Job
 
         public async Task<ApiChannel> GetDefaultChannelInfo()
         {
-            var channel =  await _channelService.GetChannelInfo();
+            var channel = await _channelService.GetChannelInfo();
             return channel?.channel;
         }
 
         public async Task<IEnumerable<ApiUser>> GetPendingUsersForChannel(IEnumerable<ApiUser> users, ApiChannel channel, Meeting meeting)
         {
-            //TODO continuar aqui
-            return null;
+            var list = new List<ApiUser>();
+
+            var questions = (await _questionService.GetAll(true)).ToList();
+            if(!questions.Any())
+                return list;
+
+            var answers = (await _answerService.GetByMeeting(meeting)).ToList();
+            if (!answers.Any())
+                return users;
+
+            users.ForEach(u =>
+            {
+                if(answers.Count(x => x.User.UserId == u.id) < questions.Count)
+                    list.Add(u);
+            });
+            //TODO ajustes depois que estiver monitorando respostas
+
+            return list;
         }
 
         public async Task AskScrumQuestions(IEnumerable<ApiUser> users)

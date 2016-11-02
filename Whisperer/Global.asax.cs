@@ -59,7 +59,7 @@ namespace Whisperer
             var service = Ioc.Container.GetInstance<IQuestionService>();
             var questions = LoadQuestionJson();
 
-            service.GetAll().ToList().ForEach(x =>
+            (service.GetAll().Result).ToList().ForEach(x =>
             {
                 x.Active = questions.Any(q => x.Text == q.Text);
                 service.Update(x);

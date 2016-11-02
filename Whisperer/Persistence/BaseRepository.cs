@@ -21,7 +21,7 @@ namespace MegaStore.Persistence
             this.Context = context;
         }
 
-        public T Get(int id)
+        public T Get(long id)
         {
             lock (Locker)
             {
@@ -92,7 +92,7 @@ namespace MegaStore.Persistence
             return true;
         }
 
-        public bool Delete(int id)
+        public bool Delete(long id)
         {
             lock (Locker)
             {
