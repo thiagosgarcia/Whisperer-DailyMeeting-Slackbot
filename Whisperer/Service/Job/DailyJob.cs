@@ -38,7 +38,6 @@ namespace Whisperer.Service.Job
                     var channel = await GetDefaultChannelInfo();
                     var meeting = await _meetingService.GetOrAddMeeting();
                     users = await GetPendingUsersForChannel(users, channel, meeting);
-                    await AskScrumQuestions(users);
                 }
                 catch (Exception ex)
                 {
@@ -46,7 +45,7 @@ namespace Whisperer.Service.Job
                 }
                 finally
                 {
-                    Thread.Sleep(1000 /* * 60*/ * 5);
+                    Thread.Sleep(1000 /* * 60*/ * 20);
                 }
             }
         }
@@ -67,27 +66,46 @@ namespace Whisperer.Service.Job
         {
             var list = new List<ApiUser>();
 
-            var questions = (await _questionService.GetAll(true)).ToList();
-            if(!questions.Any())
-                return list;
+            List<Question> questions = null;
+            List<Answer> answers = null;
 
-            var answers = (await _answerService.GetByMeeting(meeting)).ToList();
-            if (!answers.Any())
-                return users;
+            var loadQuestionsTask = Task.Run(async () => questions = (await _questionService.GetAll(true)).ToList());
+            var loadAnswersTask = Task.Run(async () => answers = (await _answerService.GetByMeeting(meeting)).ToList());
 
-            users.ForEach(u =>
+            await Task.WhenAll(loadAnswersTask, loadQuestionsTask);
+
+            Parallel.ForEach(users, u =>
             {
-                if(answers.Count(x => x.User.UserId == u.id) < questions.Count)
-                    list.Add(u);
+                var userAnswers = answers.Where(x => x.User.UserId == u.id).ToList();
+                if (userAnswers.Count() == questions.Count)
+                    return;
+
+                var questionsLeft = GetQuestionsLeft(userAnswers, questions);
+                if (!questionsLeft.Any()) //TODO Verificar se realmente preciso disso
+                    return;
+
+                Task.Run(() => AskScrumQuestion(u, questionsLeft.FirstOrDefault()));
+                list.Add(u);
             });
             //TODO ajustes depois que estiver monitorando respostas
 
             return list;
         }
 
-        public async Task AskScrumQuestions(IEnumerable<ApiUser> users)
+        private List<Question> GetQuestionsLeft(List<Answer> userAnswers, List<Question> questions)
         {
-            return;
+            var questionsLeft = new List<Question>();
+            questions.ForEach(q =>
+            {
+                if(userAnswers.All(x => x.Question.Id != q.Id))
+                    questionsLeft.Add(q);
+            });
+            return questionsLeft;
+        }
+
+        public void AskScrumQuestion(ApiUser user, Question question)
+        {
+            var a = 1;
         }
     }
 }
