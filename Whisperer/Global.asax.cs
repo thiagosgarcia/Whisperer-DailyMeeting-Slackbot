@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -6,8 +8,10 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using Newtonsoft.Json;
+using WebGrease.Css.Extensions;
 using Whisperer.App_Start;
 using Whisperer.DependencyResolution;
+using Whisperer.Models;
 using Whisperer.Service;
 using Whisperer.Service.Job;
 using ConfigurationModel = Whisperer.Models.Configuration;
@@ -28,6 +32,7 @@ namespace Whisperer
             Mapper.Initialize();
 
             UpdateConfiguration();
+            UpdateQuestions();
             StartJob();
         }
 
@@ -36,7 +41,7 @@ namespace Whisperer
             var service = Ioc.Container.GetInstance<IService<ConfigurationModel>>();
             var config = LoadConfigJson();
 
-            config.Id = service.GetAll().OrderBy(x=> x.Id).First().Id;
+            config.Id = service.GetAll().OrderBy(x => x.Id).First().Id;
             service.Update(config);
         }
 
@@ -46,6 +51,39 @@ namespace Whisperer
             {
                 var json = r.ReadToEnd();
                 return JsonConvert.DeserializeObject<ConfigurationModel>(json);
+            }
+        }
+
+        private void UpdateQuestions()
+        {
+            var service = Ioc.Container.GetInstance<IQuestionService>();
+            var questions = LoadQuestionJson();
+
+            service.GetAll().ToList().ForEach(x =>
+            {
+                x.Active = questions.Any(q => x.Text == q.Text);
+                service.Update(x);
+            });
+            questions?.ForEach(x =>
+            {
+                var existing = service.GetByText(x.Text);
+                if (existing == null)
+                    service.Add(x);
+                else
+                {
+                    existing.Text = x.Text;
+                    existing.Active = x.Active;
+                    service.Update(existing);
+                }
+            });
+        }
+
+        private List<Question> LoadQuestionJson()
+        {
+            using (var r = new StreamReader(Server.MapPath("~/App_Data/questions.json")))
+            {
+                var json = r.ReadToEnd();
+                return JsonConvert.DeserializeObject<List<Question>>(json, new  JsonSerializerSettings() {Culture = CultureInfo.InvariantCulture});
             }
         }
 

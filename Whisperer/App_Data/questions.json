@@ -1,0 +1,14 @@
+[
+  {
+    "text": "O que você fez ontem?",
+    "active":  true 
+  },
+  {
+    "text": "O que está impedindo que seu trabalho flua mais rapidamente?",
+    "active":  true
+  },
+  {
+    "text": "O que você pretende realizar hoje?",
+    "active":  true
+  }
+]

@@ -223,6 +223,10 @@
     <Compile Include="Migrations\201611010223537_DefaultChannel.Designer.cs">
       <DependentUpon>201611010223537_DefaultChannel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611020045314_QuestionStatuses.cs" />
+    <Compile Include="Migrations\201611020045314_QuestionStatuses.Designer.cs">
+      <DependentUpon>201611020045314_QuestionStatuses.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Service\Commands\EmptyCommand.cs" />
     <Compile Include="Service\Commands\_AbstractCommand.cs" />
@@ -239,9 +243,11 @@
     <Compile Include="Service\Configuration.cs" />
     <Compile Include="Service\IChannelService.cs" />
     <Compile Include="Service\IPostBackService.cs" />
+    <Compile Include="Service\IQuestionService.cs" />
     <Compile Include="Service\IUserService.cs" />
     <Compile Include="Service\Job\DailyJob.cs" />
     <Compile Include="Service\ChannelService.cs" />
+    <Compile Include="Service\QuestionService.cs" />
     <Compile Include="Service\UserService.cs" />
     <Compile Include="Service\ReadOnlyService.cs" />
     <Compile Include="Service\PostBackService.cs" />
@@ -273,12 +279,16 @@
     <EmbeddedResource Include="Migrations\201611010223537_DefaultChannel.resx">
       <DependentUpon>201611010223537_DefaultChannel.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611020045314_QuestionStatuses.resx">
+      <DependentUpon>201611020045314_QuestionStatuses.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <Content Include="App_Data\config.json" />
     <Content Include="App_Data\configModel.json" />
     <Content Include="connections.config" />
+    <Content Include="App_Data\questions.json" />
     <None Include="Project_Readme.html" />
     <None Include="Properties\PublishProfiles\WebDeploy.pubxml" />
   </ItemGroup>

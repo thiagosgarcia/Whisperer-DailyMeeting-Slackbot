@@ -28,6 +28,7 @@ namespace Whisperer.Models
     public class Question : Entity
     {
         public string Text { get; set; }
+        public bool Active { get; set; }
     }
 
     public class Team : Entity
