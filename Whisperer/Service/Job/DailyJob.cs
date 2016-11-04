@@ -45,7 +45,7 @@ namespace Whisperer.Service.Job
                 }
                 finally
                 {
-                    Thread.Sleep(1000 /* * 60*/ * 20);
+                    Thread.Sleep(_configuration.Instance.GetAnswerTimeout());
                 }
             }
         }
@@ -103,9 +103,11 @@ namespace Whisperer.Service.Job
             return questionsLeft;
         }
 
-        public void AskScrumQuestion(ApiUser user, Question question)
+        public async Task AskScrumQuestion(ApiUser user, Question question)
         {
-            var a = 1;
+            var response = await _questionService.Ask(user, question);
+            //TODO Monitorar resposta do usuário
+            //TODO Tratar response, adicionar logs, etc
         }
     }
 }

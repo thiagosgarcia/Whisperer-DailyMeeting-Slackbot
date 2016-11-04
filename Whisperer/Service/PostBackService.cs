@@ -21,14 +21,14 @@ namespace Whisperer.Service
         {
             using (var client = new HttpClient())
             {
-                var response = await client.PostAsJsonAsync(_configuration.GetPayloadUrl(), Pong());
+                var response = await client.PostAsJsonAsync(_configuration.Instance.PayloadUrl, Pong());
                 return await response.Content.ReadAsStringAsync();
             }
         }
 
         public async Task<CustomOutgoingPostData> Command(IncomingPostData data)
         {
-            if (data.token != _configuration.GetIncomingToken())
+            if (data.token != _configuration.Instance.IncomingToken)
                 throw new Exception();
 
             return await _matchCommand.TryMatch(data.text)?.Action(data);

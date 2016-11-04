@@ -13,6 +13,12 @@ namespace Whisperer.Models
         public string DefaultChannel { get; set; }
         public string PayloadUrl { get; set; }
         public string Language { get; set; }
+        public int AnswerTimeout { get; set; }
+
+        public int GetAnswerTimeout()
+        {
+            return AnswerTimeout * 1000;//* 60;
+        }
     }
 
     public class Entity

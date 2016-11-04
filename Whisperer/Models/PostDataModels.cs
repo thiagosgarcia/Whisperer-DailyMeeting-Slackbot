@@ -120,6 +120,106 @@ namespace Whisperer.Models
             };
         }
     }
+
+    public class OutgoingDirectMessageHistoryParameters : OutgoingParameter
+    {
+        public string channel { get; set; }
+        public string latest { get; set; }
+        public string oldest { get; set; }
+        public byte inclusive { get; set; }
+        public int count { get; set; }
+        public int unreads { get; set; }
+
+        public IEnumerable<KeyValuePair<string, string>> ToPairs()
+        {
+            return new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("token", this.token),
+                new KeyValuePair<string, string>("channel", this.channel)
+            };
+        }
+    }
+
+    public class OutgoingDirectMessageOpenParameters : OutgoingParameter
+    {
+        public string user { get; set; }
+        public string return_im { get; set; }
+
+        public IEnumerable<KeyValuePair<string, string>> ToPairs()
+        {
+            return new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("token", this.token),
+                new KeyValuePair<string, string>("user", this.user)
+            };
+        }
+    }
+
+    public class OutgoingDirectMessageParameters : OutgoingParameter
+    {// TODO: colocar todos os parâmetros
+        public string channel { get; set; }
+        public string text { get; set; }
+
+        public string GetUrl()
+        {
+            return $"https://slack.com/api/chat.postMessage?token={token}&channel={channel}&text={text}";
+        }
+
+        public IEnumerable<KeyValuePair<string, string>> ToPairs()
+        {
+            return new List<KeyValuePair<string, string>>
+            {
+                new KeyValuePair<string, string>("token", this.token),
+                new KeyValuePair<string, string>("channel", this.channel),
+                new KeyValuePair<string, string>("text", this.text)
+            };
+        }
+    }
+
+    public class DirectMessageList : ApiResponse
+    { //https://api.slack.com/methods/im.history
+        public Message[] messages { get; set; }
+        public bool has_more { get; set; }
+    }
+
+    public class Message : ApiResponse
+    {
+        public string type { get; set; }
+        public string ts { get; set; }
+        public string user { get; set; }
+        public string text { get; set; }
+        public bool is_starred { get; set; }
+        public bool wibblr { get; set; }
+    }
+
+    public class DirectMessageOpenResponse : ApiResponse
+    {
+        public bool no_op { get; set; }
+        public bool already_open { get; set; }
+
+        public DirectMessageChannel channel { get; set; }
+    }
+
+    public class DirectMessageResponse : ApiResponse
+    {
+        public string ts { get; set; }
+        public string channel { get; set; }
+
+        public Message message { get; set; }
+    }
+
+    public class DirectMessageChannel
+    {
+        public string id { get; set; }
+        public string user { get; set; }
+        public string last_read { get; set; }
+        public bool is_im { get; set; }
+        public bool is_open { get; set; }
+        public long created { get; set; }
+        public int unread_count { get; set; }
+        public int unread_count_display { get; set; }
+        public Message latest { get; set; }
+    }
     public class UsersList : ApiResponse
     {
         public ApiUser[] members { get; set; }

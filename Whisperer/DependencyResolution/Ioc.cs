@@ -40,6 +40,7 @@ namespace Whisperer.DependencyResolution
                 x.For<IQuestionService>().Use<QuestionService>();
                 x.For<IAnswerService>().Use<AnswerService>();
 
+                x.For(typeof(Whisperer.Service.Configuration)).LifecycleIs(Lifecycles.Singleton);
                 x.For<IRepository<ConfigurationModel>>().Use<NotTrackedRepository<ConfigurationModel, AppContext>>();
                 x.For<IService<ConfigurationModel>>().Use<BaseService<ConfigurationModel>>();
                 x.For<IReadOnlyService<ConfigurationModel>>().Use<ReadOnlyService<ConfigurationModel>>();

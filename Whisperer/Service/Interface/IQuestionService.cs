@@ -8,5 +8,7 @@ namespace Whisperer.Service
     {
         Task<IEnumerable<Question>> GetAll(bool? active = null);
         Question GetByText(string text);
+        Task<DirectMessageResponse> Ask(ApiUser user, Question question);
+
     }
 }

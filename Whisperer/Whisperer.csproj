@@ -227,6 +227,10 @@
     <Compile Include="Migrations\201611020045314_QuestionStatuses.Designer.cs">
       <DependentUpon>201611020045314_QuestionStatuses.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201611040136171_AnswerTimeoutConfig.cs" />
+    <Compile Include="Migrations\201611040136171_AnswerTimeoutConfig.Designer.cs">
+      <DependentUpon>201611040136171_AnswerTimeoutConfig.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Service\Commands\EmptyCommand.cs" />
     <Compile Include="Service\Commands\_AbstractCommand.cs" />
@@ -285,6 +289,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201611020045314_QuestionStatuses.resx">
       <DependentUpon>201611020045314_QuestionStatuses.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201611040136171_AnswerTimeoutConfig.resx">
+      <DependentUpon>201611040136171_AnswerTimeoutConfig.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

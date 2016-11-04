@@ -34,7 +34,7 @@ namespace Whisperer.Service
             {
                 var parameters = new OutgoingChannelListParameters
                 {
-                    token = _configuration.GetAppToken()
+                    token = _configuration.Instance.AppToken
                 };
                 var content = new FormUrlEncodedContent(parameters.ToPairs());
                 var response = await client.PostAsync("https://slack.com/api/channels.list", content);
@@ -76,8 +76,8 @@ namespace Whisperer.Service
 
                 var parameters = new OutgoingChannelInfoParameters
                 {
-                    token = _configuration.GetAppToken(),
-                    channel = channelList.channels.FirstOrDefault(x=> x.name == _configuration.GetDefaultChannel())?.id
+                    token = _configuration.Instance.AppToken,
+                    channel = channelList.channels.FirstOrDefault(x=> x.name == _configuration.Instance.DefaultChannel)?.id
                 };
                 var content = new FormUrlEncodedContent(parameters.ToPairs());
                 var response = await client.PostAsync("https://slack.com/api/channels.info", content);

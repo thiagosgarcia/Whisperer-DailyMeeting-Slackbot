@@ -31,7 +31,7 @@ namespace Whisperer.Service
             {
                 var parameters = new OutgoingUserParameters
                 {
-                    token = _configuration.GetAppToken(),
+                    token = _configuration.Instance.AppToken,
                     presence = 1
                 };
                 var content = new FormUrlEncodedContent(parameters.ToPairs());
