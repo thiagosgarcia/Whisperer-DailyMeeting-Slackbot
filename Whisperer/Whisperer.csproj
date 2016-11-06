@@ -208,6 +208,7 @@
     <Compile Include="Controllers\ListenController.cs" />
     <Compile Include="DependencyResolution\Ioc.cs" />
     <Compile Include="DependencyResolution\StructureMapControllerActivator.cs" />
+    <Compile Include="Extensions\UriBuilderExtensions.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

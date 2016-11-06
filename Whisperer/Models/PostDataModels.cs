@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Web;
 using System.Web.Helpers;
+using Whisperer.Extensions;
 
 namespace Whisperer.Models
 {
@@ -130,12 +132,27 @@ namespace Whisperer.Models
         public int count { get; set; }
         public int unreads { get; set; }
 
+        public string GetUrl()
+        {
+            var uri = new UriBuilder("https://slack.com/api/im.history");
+            uri.Append("token", token);
+            uri.Append("channel", channel);
+            uri.Append("oldest", oldest);
+            uri.Append("inclusive", inclusive.ToString());
+
+            return uri.ToString();
+        }
         public IEnumerable<KeyValuePair<string, string>> ToPairs()
         {
             return new List<KeyValuePair<string, string>>
             {
-                new KeyValuePair<string, string>("token", this.token),
-                new KeyValuePair<string, string>("channel", this.channel)
+                new KeyValuePair<string, string>("token", token),
+                new KeyValuePair<string, string>("channel", channel),
+                new KeyValuePair<string, string>("oldest", oldest),
+                new KeyValuePair<string, string>("inclusive", inclusive.ToString()),
+                //new KeyValuePair<string, string>("latest", latest),
+                //new KeyValuePair<string, string>("count", count.ToString()),
+                //new KeyValuePair<string, string>("unreads", unreads.ToString()),
             };
         }
     }
@@ -176,9 +193,10 @@ namespace Whisperer.Models
         }
     }
 
-    public class DirectMessageList : ApiResponse
+    public class DirectMessageHistoryResponse : ApiResponse
     { //https://api.slack.com/methods/im.history
         public Message[] messages { get; set; }
+        public string latest { get; set; }
         public bool has_more { get; set; }
     }
 

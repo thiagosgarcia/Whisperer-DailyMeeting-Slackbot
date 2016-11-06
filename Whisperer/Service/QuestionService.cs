@@ -6,6 +6,7 @@ using System.Net.Http.Formatting;
 using System.Net.Http.Headers;
 using System.Security.Policy;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
@@ -42,6 +43,59 @@ namespace Whisperer.Service
 
         public async Task<DirectMessageResponse> Ask(ApiUser user, Question question)
         {
+            var channelInfo = await OpenDirectMessage(user);
+            var questionAnser = await DoAskQuestion(channelInfo, question);
+
+            return questionAnser;
+        }
+
+        public async Task<DirectMessageHistoryResponse> TrackAnswer(DateTime timeout, DirectMessageResponse messageResponse, ApiUser user)
+        {
+            while (timeout.CompareTo(DateTime.Now) > 0)
+            {
+                using (var client = new HttpClient())
+                {
+                    var parameters = new OutgoingDirectMessageHistoryParameters
+                    {
+                        token = _configuration.Instance.AppToken,
+                        channel = messageResponse.channel,
+                        oldest = messageResponse.ts,
+                        inclusive = 0
+                    };
+                    var response = await client.GetAsync(parameters.GetUrl());
+                    var messages = await response.Content.ReadAsAsync<DirectMessageHistoryResponse>();
+
+                    if (messages.messages == null || messages.messages.Length == 0)
+                    {
+                        Thread.Sleep(5000);
+                        continue;
+                    }
+
+                    return messages;
+                }
+            }
+
+            return null;
+        }
+
+        private async Task<DirectMessageResponse> DoAskQuestion(
+            DirectMessageOpenResponse channelInfo, Question question)
+        {
+            using (var client = new HttpClient())
+            {
+                var parameters = new OutgoingDirectMessageParameters
+                {
+                    token = _configuration.Instance.AppToken,
+                    channel = channelInfo.channel.id,
+                    text = question.Text
+                };
+                var response = await client.GetAsync(parameters.GetUrl());
+                return await response.Content.ReadAsAsync<DirectMessageResponse>();
+            }
+        }
+
+        private async Task<DirectMessageOpenResponse> OpenDirectMessage(ApiUser user)
+        {
             using (var client = new HttpClient())
             {
                 var parameters = new OutgoingDirectMessageOpenParameters
@@ -52,21 +106,8 @@ namespace Whisperer.Service
 
                 var content = new FormUrlEncodedContent(parameters.ToPairs());
                 var response = await client.PostAsync("https://slack.com/api/im.open", content);
-                var channelInfo = await response.Content.ReadAsAsync<DirectMessageOpenResponse>();
-
-                //TODO Ajustar e continuar aqui
-                var p2 = new OutgoingDirectMessageParameters
-                {
-                    token = _configuration.Instance.AppToken,
-                    channel = channelInfo.channel.id,
-                    text = question.Text
-                };
-                var r = await client.GetAsync(p2.GetUrl());
-                var s = await r.Content.ReadAsAsync<DirectMessageResponse>();
-
-                return s;
+                return await response.Content.ReadAsAsync<DirectMessageOpenResponse>();
             }
-
         }
     }
 }

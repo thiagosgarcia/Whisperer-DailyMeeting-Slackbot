@@ -17,7 +17,7 @@ namespace Whisperer.Models
 
         public int GetAnswerTimeout()
         {
-            return AnswerTimeout * 1000;//* 60;
+            return AnswerTimeout * 1000 * 60;
         }
     }
 

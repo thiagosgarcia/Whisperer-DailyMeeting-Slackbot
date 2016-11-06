@@ -76,6 +76,8 @@ namespace Whisperer.Service.Job
 
             Parallel.ForEach(users, u =>
             {
+                if (u.name.Equals("Worklife", StringComparison.InvariantCultureIgnoreCase))
+                    return;
                 var userAnswers = answers.Where(x => x.User.UserId == u.id).ToList();
                 if (userAnswers.Count() == questions.Count)
                     return;
@@ -105,7 +107,14 @@ namespace Whisperer.Service.Job
 
         public async Task AskScrumQuestion(ApiUser user, Question question)
         {
+            var timeout = DateTime.Now.AddMinutes(_configuration.Instance.GetAnswerTimeout());
             var response = await _questionService.Ask(user, question);
+            var answer = await _questionService.TrackAnswer(timeout, response, user);
+
+            if (answer == null)
+                return;
+            //TODO Persistir resposta
+
             //TODO Monitorar resposta do usuário
             //TODO Tratar response, adicionar logs, etc
         }
