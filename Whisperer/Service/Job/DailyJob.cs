@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
-using WebGrease.Css.Extensions;
 using Whisperer.DependencyResolution;
 using Whisperer.Models;
+using Whisperer.App_Start;
 
 namespace Whisperer.Service.Job
 {
@@ -83,10 +82,7 @@ namespace Whisperer.Service.Job
                     return;
 
                 var questionsLeft = GetQuestionsLeft(userAnswers, questions);
-                if (!questionsLeft.Any()) //TODO Verificar se realmente preciso disso
-                    return;
-
-                Task.Run(() => AskScrumQuestion(u, questionsLeft.FirstOrDefault()));
+                Task.Run(() => AskScrumQuestion(u, questionsLeft, meeting));
                 list.Add(u);
             });
             //TODO ajustes depois que estiver monitorando respostas
@@ -105,18 +101,36 @@ namespace Whisperer.Service.Job
             return questionsLeft;
         }
 
-        public async Task AskScrumQuestion(ApiUser user, Question question)
+        public async Task AskScrumQuestion(ApiUser user, List<Question> questionsLeft, Meeting meeting)
         {
+            if (!questionsLeft.Any())
+                return;
+
+            var question = questionsLeft.FirstOrDefault();
             var timeout = DateTime.Now.AddMinutes(_configuration.Instance.GetAnswerTimeout());
             var response = await _questionService.Ask(user, question);
             var answer = await _questionService.TrackAnswer(timeout, response, user);
 
             if (answer == null)
                 return;
-            //TODO Persistir resposta
 
-            //TODO Monitorar resposta do usuário
+            await SaveAnswer(user, question, meeting, answer);
+            questionsLeft.Remove(question);
+            await AskScrumQuestion(user, questionsLeft, meeting);
+
             //TODO Tratar response, adicionar logs, etc
+        }
+
+        private async Task SaveAnswer(ApiUser user, Question question, Meeting meeting, DirectMessageHistoryResponse answer)
+        {
+            var dbAnswer = new Answer
+            {
+                Question = question,
+                User = Mapper.Map.Map<ApiUser, User>(user),
+                Text = string.Join("; ", answer.messages.Select(x => x.text)),
+                Meeting = meeting
+            };
+            _answerService.Add(dbAnswer);
         }
     }
 }

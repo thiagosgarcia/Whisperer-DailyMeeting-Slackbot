@@ -3,7 +3,7 @@ using Whisperer.Models;
 
 namespace Whisperer.Service
 {
-    public interface IUserService
+    public interface IUserService : IService<User>
     {
         Task<int> AddNewUsers(UsersList users);
         User GetByUserId(string userId);

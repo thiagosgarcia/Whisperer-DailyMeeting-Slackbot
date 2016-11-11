@@ -20,10 +20,24 @@ namespace Whisperer.Service
     public class AnswerService : BaseService<Answer>, IAnswerService
     {
         private IMeetingService _meetingService;
+        private IQuestionService _questionService;
+        private IUserService _userService;
 
         public AnswerService(IRepository<Answer> repository) : base(repository)
         {
             _meetingService = Ioc.Container.GetInstance<IMeetingService>();
+            _questionService = Ioc.Container.GetInstance<IQuestionService>();
+            _userService = Ioc.Container.GetInstance<IUserService>();
+
+            BeforeAdd += BeforeAddOrUpdate;
+            BeforeUpdate += BeforeAddOrUpdate;
+        }
+
+        private void BeforeAddOrUpdate(Answer x)
+        {
+            x.Question = x.Question != null ? _questionService.Get(x.Question.Id) : null;
+            x.Meeting = x.Meeting != null ? _meetingService.Get(x.Meeting.Id) : null;
+            x.User = x.User != null ? _userService.GetByUserId(x.User.UserId) : null;
         }
 
         public async Task<IEnumerable<Answer>> GetByMeeting(DateTime? date = null)

@@ -20,8 +20,8 @@ namespace Whisperer.DependencyResolution
             {
                 x.For(typeof(DailyJob)).LifecycleIs(Lifecycles.Singleton);
 
-                x.For(typeof(AppContext)).LifecycleIs(Lifecycles.Transient);
-                x.For<DbContext>().LifecycleIs(Lifecycles.Transient).Use<AppContext>();
+                x.For(typeof(AppContext)).LifecycleIs(Lifecycles.Singleton);
+                x.For<DbContext>().LifecycleIs(Lifecycles.Singleton).Use<AppContext>();
 
                 x.For<IRepository<Answer>>().Use<Repository<Answer, AppContext>>();
                 x.For<IRepository<Meeting>>().Use<Repository<Meeting, AppContext>>();
