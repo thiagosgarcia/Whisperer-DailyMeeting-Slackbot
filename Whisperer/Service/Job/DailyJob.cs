@@ -76,7 +76,7 @@ namespace Whisperer.Service.Job
 
             Parallel.ForEach(users, u =>
             {
-                if (u.name.Equals("Worklife", StringComparison.InvariantCultureIgnoreCase))
+                if(_configuration.Instance.IgnoredUsersList.Contains(u.name, StringComparer.InvariantCultureIgnoreCase))
                     return;
                 var userAnswers = answers.Where(x => x.User.UserId == u.id).ToList();
                 if (userAnswers.Count() == questions.Count)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace Whisperer.Models
 {
@@ -13,6 +14,12 @@ namespace Whisperer.Models
         public string DefaultChannel { get; set; }
         public string PayloadUrl { get; set; }
         public string Language { get; set; }
+        public string IgnoredUsers
+        {
+            get { return string.Join(",", IgnoredUsersList ?? new string[] { }); }
+            set { IgnoredUsersList = value?.Split(',') ?? new string[] { }; }
+        }
+        public string[] IgnoredUsersList { get; set; }
         public int AnswerTimeout { get; set; }
 
         public int GetAnswerTimeout()

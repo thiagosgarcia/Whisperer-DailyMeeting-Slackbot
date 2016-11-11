@@ -8,5 +8,6 @@
   "IncomingToken": "<outgoing_token from slack>",
   "AppToken":  "<appToken>", 
   "DefaultChannel":  "<channel name>", 
-  "Language": "pt"
+  "Language": "pt",
+  "IgnoredUsersList": []
 }
