@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using log4net;
 using Whisperer.DependencyResolution;
 using Whisperer.Models;
 using Whisperer.App_Start;
@@ -17,6 +18,9 @@ namespace Whisperer.Service.Job
         private IMeetingService _meetingService;
         private IAnswerService _answerService;
         private IQuestionService _questionService;
+
+        private static readonly ILog Log =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public DailyJob()
         {
@@ -40,10 +44,11 @@ namespace Whisperer.Service.Job
                 }
                 catch (Exception ex)
                 {
-
+                    Log.Error(ex.StackTrace);
                 }
                 finally
                 {
+                    Log.Info("Sleeping");
                     Thread.Sleep(_configuration.Instance.GetAnswerTimeout());
                 }
             }
@@ -51,18 +56,21 @@ namespace Whisperer.Service.Job
 
         public async Task<IEnumerable<ApiUser>> GetActiveUsers()
         {
+            Log.Info("Getting active users...");
             var u = await _userService.GetUsers();
             return u.members.Where(x => x.presence == "active");
         }
 
         public async Task<ApiChannel> GetDefaultChannelInfo()
         {
+            Log.Info("Getting channel info...");
             var channel = await _channelService.GetChannelInfo();
             return channel?.channel;
         }
 
         public async Task<IEnumerable<ApiUser>> GetPendingUsersForChannel(IEnumerable<ApiUser> users, ApiChannel channel, Meeting meeting)
         {
+            Log.Info("Getting meeting data...");
             var list = new List<ApiUser>();
 
             List<Question> questions = null;
@@ -72,14 +80,21 @@ namespace Whisperer.Service.Job
             var loadAnswersTask = Task.Run(async () => answers = (await _answerService.GetByMeeting(meeting)).ToList());
 
             await Task.WhenAll(loadAnswersTask, loadQuestionsTask);
+            Log.Info("Meeting loaded");
 
             Parallel.ForEach(users, u =>
             {
-                if(_configuration.Instance.IgnoredUsersList.Contains(u.name, StringComparer.InvariantCultureIgnoreCase))
+                if (_configuration.Instance.IgnoredUsersList.Contains(u.name, StringComparer.InvariantCultureIgnoreCase))
+                {
+                    Log.Info($"{u.name} ignored");
                     return;
+                }
                 var userAnswers = answers.Where(x => x.User.UserId == u.id).ToList();
                 if (userAnswers.Count() == questions.Count)
+                {
+                    Log.Info($"{u.name} no questions left");
                     return;
+                }
 
                 var questionsLeft = GetQuestionsLeft(userAnswers, questions);
                 Task.Run(() => AskScrumQuestion(u, questionsLeft, meeting));
@@ -106,13 +121,18 @@ namespace Whisperer.Service.Job
             if (!questionsLeft.Any())
                 return;
 
-            var question = questionsLeft.FirstOrDefault();
+            var question = questionsLeft.First();
+            Log.Info($"{user.name} will be asked {question.Text}");
+
             var timeout = DateTime.Now.AddMinutes(_configuration.Instance.GetAnswerTimeout());
             var response = await _questionService.Ask(user, question);
             var answer = await _questionService.TrackAnswer(timeout, response, user);
 
             if (answer == null)
+            {
+                Log.Info($"{user.name} no answer");
                 return;
+            }
 
             await SaveAnswer(user, question, meeting, answer);
             questionsLeft.Remove(question);
@@ -130,6 +150,8 @@ namespace Whisperer.Service.Job
                 Text = string.Join("; ", answer.messages.Select(x => x.text)),
                 Meeting = meeting
             };
+
+            Log.Info($"{user.name} answered {dbAnswer.Text}");
             _answerService.Add(dbAnswer);
         }
     }
