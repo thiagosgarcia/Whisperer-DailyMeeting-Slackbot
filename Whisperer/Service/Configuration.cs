@@ -8,9 +8,9 @@ namespace Whisperer.Service
         private IReadOnlyService<ConfigurationModel> _service;
         public ConfigurationModel Instance;
 
-        public Configuration()
+        public Configuration(IReadOnlyService<ConfigurationModel> service)
         {
-            _service = Ioc.Container.GetInstance<IReadOnlyService<ConfigurationModel>>();
+            _service = service;
             LoadData();
         }
 

@@ -1,5 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
 using System.Text.RegularExpressions;
+using WebGrease.Css.Extensions;
 using Whisperer.DependencyResolution;
 using Whisperer.Models;
 
@@ -7,21 +11,34 @@ namespace Whisperer.Service.Commands
 {
     public class MatchCommand
     {
-        public List<ICommand> Commands => new List<ICommand>
+        private IEnumerable<Type> Commands;
+        private List<Type> _excludedCommands = new List<Type>
         {
-            Ioc.Container.GetInstance<PingCommand>(),
-            Ioc.Container.GetInstance<ConfigCommand>(),
-            Ioc.Container.GetInstance<HelpCommand>(),
+            typeof(EmptyCommand),
+            typeof(AbstractCommand)
         };
+
+        public MatchCommand()
+        {
+            Commands = Assembly.GetExecutingAssembly().GetTypes()
+                .Where(filterCommands);
+        }
+
+        private bool filterCommands(Type i)
+        {
+            return typeof(AbstractCommand).IsAssignableFrom(i) &&
+                _excludedCommands.All(x => x.Name != i.Name);
+        }
         public ICommand TryMatch(string s)
         {
             foreach (var comm in Commands)
             {
-                foreach (var regex in comm.GetRegexes())
+                var instance = Ioc.Container.GetInstance(comm) as AbstractCommand;
+                foreach (var regex in instance.GetRegexes())
                 {
                     var match = Regex.Match(s, regex);
                     if (match.Success)
-                        return comm;
+                        return instance;
                 }
             }
 

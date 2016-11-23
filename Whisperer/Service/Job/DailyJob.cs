@@ -22,14 +22,15 @@ namespace Whisperer.Service.Job
         private static readonly ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public DailyJob()
+        public DailyJob(Configuration configuration, IUserService userService, IChannelService channelService, 
+            IMeetingService meetingService, IAnswerService answerService, IQuestionService questionService)
         {
-            _configuration = Ioc.Container.GetInstance<Configuration>();
-            _userService = Ioc.Container.GetInstance<IUserService>();
-            _channelService = Ioc.Container.GetInstance<IChannelService>();
-            _meetingService = Ioc.Container.GetInstance<IMeetingService>();
-            _answerService = Ioc.Container.GetInstance<IAnswerService>();
-            _questionService = Ioc.Container.GetInstance<IQuestionService>();
+            _configuration = configuration;
+            _userService = userService;
+            _channelService = channelService;
+            _meetingService = meetingService;
+            _answerService = answerService;
+            _questionService = questionService;
         }
         public async void Start()
         {
@@ -110,7 +111,7 @@ namespace Whisperer.Service.Job
             var questionsLeft = new List<Question>();
             questions.ForEach(q =>
             {
-                if(userAnswers.All(x => x.Question.Id != q.Id))
+                if (userAnswers.All(x => x.Question.Id != q.Id))
                     questionsLeft.Add(q);
             });
             return questionsLeft;

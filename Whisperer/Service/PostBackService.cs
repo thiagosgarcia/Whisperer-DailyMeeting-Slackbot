@@ -12,10 +12,10 @@ namespace Whisperer.Service
         private readonly Configuration _configuration;
         private readonly MatchCommand _matchCommand;
 
-        public PostBackService()
+        public PostBackService(Configuration configuration, MatchCommand matchCommand)
         {
-            _configuration = Ioc.Container.GetInstance<Configuration>();
-            _matchCommand = Ioc.Container.GetInstance<MatchCommand>();
+            _configuration = configuration;
+            _matchCommand = matchCommand;
         }
         public async Task<string> Ping()
         {

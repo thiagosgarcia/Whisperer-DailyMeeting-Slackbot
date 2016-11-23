@@ -40,8 +40,11 @@ namespace Whisperer.Service
 
         public async Task<Meeting> GetByDate(DateTime? date = null)
         {
-            var tomorrow = date?.AddDays(1);
-            return _repository.Items.SingleOrDefault(x => x.Date >= date && x.Date < tomorrow.Value);
+            if (date == null)
+                date = DateTime.Today;
+
+            var tomorrow = date.Value.AddDays(1);
+            return _repository.Items.SingleOrDefault(x => x.Date >= date && x.Date < tomorrow);
         }
     }
 }

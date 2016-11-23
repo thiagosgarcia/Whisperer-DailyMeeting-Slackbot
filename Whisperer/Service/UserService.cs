@@ -19,11 +19,10 @@ namespace Whisperer.Service
     public class UserService : BaseService<User>, IUserService
     {
         private readonly Configuration _configuration;
-        private IService<User> _userService;
 
-        public UserService(IRepository<User> repository) : base(repository)
+        public UserService(IRepository<User> repository, Configuration configuration) : base(repository)
         {
-            _configuration = Ioc.Container.GetInstance<Configuration>();
+            _configuration = configuration;
         }
         public async Task<UsersList> GetUsers()
         {

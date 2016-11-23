@@ -23,11 +23,12 @@ namespace Whisperer.Service
         private IQuestionService _questionService;
         private IUserService _userService;
 
-        public AnswerService(IRepository<Answer> repository) : base(repository)
+        public AnswerService(IRepository<Answer> repository, IMeetingService meetingService,
+            IQuestionService questionService, IUserService userService) : base(repository)
         {
-            _meetingService = Ioc.Container.GetInstance<IMeetingService>();
-            _questionService = Ioc.Container.GetInstance<IQuestionService>();
-            _userService = Ioc.Container.GetInstance<IUserService>();
+            _meetingService = meetingService;
+            _questionService = questionService;
+            _userService = userService;
 
             BeforeAdd += BeforeAddOrUpdate;
             BeforeUpdate += BeforeAddOrUpdate;
@@ -42,7 +43,8 @@ namespace Whisperer.Service
 
         public async Task<IEnumerable<Answer>> GetByMeeting(DateTime? date = null)
         {
-            return await GetByMeeting(await _meetingService.GetByDate(date));
+            var meeting = await _meetingService.GetByDate(date);
+            return await GetByMeeting(meeting);
         }
         public async Task<IEnumerable<Answer>> GetByMeeting(Meeting meeting)
         {

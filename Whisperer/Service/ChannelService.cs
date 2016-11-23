@@ -22,9 +22,9 @@ namespace Whisperer.Service
         private readonly Configuration _configuration;
         private IService<Channel> _userService;
 
-        public ChannelService(IRepository<Channel> repository) : base(repository)
+        public ChannelService(IRepository<Channel> repository, Configuration configuration) : base(repository)
         {
-            _configuration = Ioc.Container.GetInstance<Configuration>();
+            _configuration = configuration;
         }
 
         public async Task<ChannelsList> GetChannelList()

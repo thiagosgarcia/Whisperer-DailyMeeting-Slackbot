@@ -241,6 +241,7 @@
       <DependentUpon>201611110012357_IgnoredUsers.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Service\Commands\DmCommand.cs" />
     <Compile Include="Service\Commands\EmptyCommand.cs" />
     <Compile Include="Service\Commands\_AbstractCommand.cs" />
     <Compile Include="Service\Commands\HelpCommand.cs" />
