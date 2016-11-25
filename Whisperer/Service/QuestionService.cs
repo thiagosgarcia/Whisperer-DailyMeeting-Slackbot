@@ -10,18 +10,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Helpers;
+using log4net;
 using MegaStore.Persistence;
 using WebGrease.Css.Extensions;
 using Whisperer.App_Start;
 using Whisperer.DependencyResolution;
 using Whisperer.Models;
 using Whisperer.Service.Commands;
+using Whisperer.Service.Job;
 using ConfigurationModel = Whisperer.Models.Configuration;
 namespace Whisperer.Service
 {
     public class QuestionService : BaseService<Question>, IQuestionService
     {
         private readonly Configuration _configuration;
+        private static readonly ILog Log =
+            log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public QuestionService(IRepository<Question> repository, Configuration configuration) : base(repository)
         {
@@ -55,6 +59,7 @@ namespace Whisperer.Service
             {
                 using (var client = new HttpClient())
                 {
+                    Log.Info($"Looking for answers from {user.name} since {messageResponse.ts}");
                     var parameters = new OutgoingDirectMessageHistoryParameters
                     {
                         token = _configuration.Instance.AppToken,
@@ -67,7 +72,8 @@ namespace Whisperer.Service
 
                     if (messages.messages == null || messages.messages.Length == 0)
                     {
-                        Thread.Sleep(5000);
+                        Log.Info($"No answers from {user.name}, waiting...");
+                        await Task.Delay(5000);
                         continue;
                     }
 

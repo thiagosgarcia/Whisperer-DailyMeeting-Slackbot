@@ -22,7 +22,9 @@ namespace Whisperer.Service.Job
         private static readonly ILog Log =
             log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        public DailyJob(Configuration configuration, IUserService userService, IChannelService channelService, 
+        private static DateTime? _willWakeUp = null;
+
+        public DailyJob(Configuration configuration, IUserService userService, IChannelService channelService,
             IMeetingService meetingService, IAnswerService answerService, IQuestionService questionService)
         {
             _configuration = configuration;
@@ -49,8 +51,9 @@ namespace Whisperer.Service.Job
                 }
                 finally
                 {
-                    Log.Info("Sleeping");
-                    Thread.Sleep(_configuration.Instance.GetAnswerTimeout());
+                    _willWakeUp = DateTime.Now.AddMilliseconds(_configuration.Instance.GetAnswerTimeout());
+                    Log.Info($"Sleeping until {_willWakeUp.Value:u}");
+                    await Task.Delay(_configuration.Instance.GetAnswerTimeout());
                 }
             }
         }
@@ -77,10 +80,9 @@ namespace Whisperer.Service.Job
             List<Question> questions = null;
             List<Answer> answers = null;
 
-            var loadQuestionsTask = Task.Run(async () => questions = (await _questionService.GetAll(true)).ToList());
-            var loadAnswersTask = Task.Run(async () => answers = (await _answerService.GetByMeeting(meeting)).ToList());
+            questions = (await _questionService.GetAll(true)).ToList();
+            answers = (_answerService.GetByMeeting(meeting)).ToList();
 
-            await Task.WhenAll(loadAnswersTask, loadQuestionsTask);
             Log.Info("Meeting loaded");
 
             Parallel.ForEach(users, u =>
@@ -125,7 +127,7 @@ namespace Whisperer.Service.Job
             var question = questionsLeft.First();
             Log.Info($"{user.name} will be asked {question.Text}");
 
-            var timeout = DateTime.Now.AddMinutes(_configuration.Instance.GetAnswerTimeout());
+            var timeout = (_willWakeUp ?? DateTime.Now.AddMilliseconds(_configuration.Instance.GetAnswerTimeout())).AddSeconds(-10);
             var response = await _questionService.Ask(user, question);
             var answer = await _questionService.TrackAnswer(timeout, response, user);
 

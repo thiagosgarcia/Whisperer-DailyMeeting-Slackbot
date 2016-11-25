@@ -7,7 +7,7 @@ namespace Whisperer.Service
 {
     public interface IAnswerService : IService<Answer>
     {
-        Task<IEnumerable<Answer>> GetByMeeting(Meeting meeting);
+        IEnumerable<Answer> GetByMeeting(Meeting meeting);
         Task<IEnumerable<Answer>> GetByMeeting(DateTime? date = default(DateTime?));
     }
 }

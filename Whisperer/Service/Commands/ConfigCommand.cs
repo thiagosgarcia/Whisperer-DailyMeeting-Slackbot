@@ -14,9 +14,9 @@ namespace Whisperer.Service.Commands
     {
         private IService<ConfigurationModel> _service;
 
-        public ConfigCommand()
+        public ConfigCommand(IService<ConfigurationModel> service)
         {
-            _service = Ioc.Container.GetInstance<IService<ConfigurationModel>>();
+            _service = service;
         }
         public override string[] GetRegexes()
         {

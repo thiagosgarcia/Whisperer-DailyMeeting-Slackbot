@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System.Web.Http;
+using StructureMap;
+using Whisperer.App_Start;
 using Whisperer.DependencyResolution;
 using Whisperer.Models;
 using Whisperer.Service;
@@ -10,10 +12,9 @@ namespace Whisperer.Controllers
     public class ListenController : ApiController
     {
         private readonly IPostBackService _service;
-
         public ListenController()
         {
-            _service = Ioc.Container.GetInstance<IPostBackService>();
+            _service = StructuremapMvc.StructureMapDependencyScope.Container.GetInstance<IPostBackService>();
         }
         public async Task<CustomOutgoingPostData> Post([FromBody]IncomingPostData data)
         {

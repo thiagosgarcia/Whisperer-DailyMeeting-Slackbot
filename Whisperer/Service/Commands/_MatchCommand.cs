@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using WebGrease.Css.Extensions;
+using Whisperer.App_Start;
 using Whisperer.DependencyResolution;
 using Whisperer.Models;
 
@@ -21,10 +22,10 @@ namespace Whisperer.Service.Commands
         public MatchCommand()
         {
             Commands = Assembly.GetExecutingAssembly().GetTypes()
-                .Where(filterCommands);
+                .Where(FilterCommands);
         }
 
-        private bool filterCommands(Type i)
+        private bool FilterCommands(Type i)
         {
             return typeof(AbstractCommand).IsAssignableFrom(i) &&
                 _excludedCommands.All(x => x.Name != i.Name);
@@ -33,7 +34,7 @@ namespace Whisperer.Service.Commands
         {
             foreach (var comm in Commands)
             {
-                var instance = Ioc.Container.GetInstance(comm) as AbstractCommand;
+                var instance = StructuremapMvc.StructureMapDependencyScope.Container.GetInstance(comm) as AbstractCommand;
                 foreach (var regex in instance.GetRegexes())
                 {
                     var match = Regex.Match(s, regex);
@@ -42,7 +43,7 @@ namespace Whisperer.Service.Commands
                 }
             }
 
-            return Ioc.Container.GetInstance<EmptyCommand>();
+            return StructuremapMvc.StructureMapDependencyScope.Container.GetInstance<EmptyCommand>();
         }
     }
 }

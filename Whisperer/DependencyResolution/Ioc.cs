@@ -13,10 +13,9 @@ namespace Whisperer.DependencyResolution
 {
     public static class Ioc
     {
-        public static Container Container;
-        public static void Initialize()
+        public static Container Initialize()
         {
-            Container = new Container(x =>
+            return new Container(x =>
             {
                 x.For(typeof(DailyJob)).LifecycleIs(Lifecycles.Singleton);
 

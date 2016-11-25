@@ -28,7 +28,6 @@ namespace Whisperer
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
-            Ioc.Initialize();
             Mapper.Initialize();
 
             UpdateConfiguration();
@@ -38,7 +37,7 @@ namespace Whisperer
 
         private void UpdateConfiguration()
         {
-            var service = Ioc.Container.GetInstance<IService<ConfigurationModel>>();
+            var service = StructuremapMvc.StructureMapDependencyScope.Container.GetInstance<IService<ConfigurationModel>>();
             var config = LoadConfigJson();
 
             config.Id = service.GetAll().OrderBy(x => x.Id).First().Id;
@@ -56,7 +55,7 @@ namespace Whisperer
 
         private void UpdateQuestions()
         {
-            var service = Ioc.Container.GetInstance<IQuestionService>();
+            var service = StructuremapMvc.StructureMapDependencyScope.Container.GetInstance<IQuestionService>();
             var questions = LoadQuestionJson();
 
             (service.GetAll().Result).ToList().ForEach(x =>
@@ -89,7 +88,7 @@ namespace Whisperer
 
         private async void StartJob()
         {
-            Ioc.Container.GetInstance<DailyJob>().Start();
+            StructuremapMvc.StructureMapDependencyScope.Container.GetInstance<DailyJob>().Start();
         }
     }
 }

@@ -44,9 +44,9 @@ namespace Whisperer.Service
         public async Task<IEnumerable<Answer>> GetByMeeting(DateTime? date = null)
         {
             var meeting = await _meetingService.GetByDate(date);
-            return await GetByMeeting(meeting);
+            return GetByMeeting(meeting);
         }
-        public async Task<IEnumerable<Answer>> GetByMeeting(Meeting meeting)
+        public IEnumerable<Answer> GetByMeeting(Meeting meeting)
         {
             return _repository.Items.Where(x => x.Meeting.Id == meeting.Id);
         }
