@@ -70,6 +70,7 @@ namespace Whisperer.Service
                     var response = await client.GetAsync(parameters.GetUrl());
                     var messages = await response.Content.ReadAsAsync<DirectMessageHistoryResponse>();
 
+                    messages.messages = messages.messages?.Where(x => x.user == user.id).ToArray();
                     if (messages.messages == null || messages.messages.Length == 0)
                     {
                         Log.Info($"No answers from {user.name}, waiting...");
