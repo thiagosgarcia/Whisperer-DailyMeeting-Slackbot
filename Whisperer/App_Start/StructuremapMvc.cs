@@ -45,7 +45,7 @@ namespace Whisperer.App_Start {
         }
 		
         public static void Start() {
-            IContainer container = Ioc.Initialize();
+            IContainer container = IoC.Initialize();
             StructureMapDependencyScope = new StructureMapDependencyScope(container);
             DependencyResolver.SetResolver(StructureMapDependencyScope);
             DynamicModuleUtility.RegisterModule(typeof(StructureMapScopeModule));

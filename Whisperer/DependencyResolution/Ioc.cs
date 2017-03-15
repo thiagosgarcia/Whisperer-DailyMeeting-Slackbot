@@ -11,7 +11,7 @@ using ConfigurationService = Whisperer.Service.Configuration;
 
 namespace Whisperer.DependencyResolution
 {
-    public static class Ioc
+    public static class IoC
     {
         public static Container Initialize()
         {

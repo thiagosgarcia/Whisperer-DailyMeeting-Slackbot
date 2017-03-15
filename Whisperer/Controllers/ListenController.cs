@@ -12,9 +12,9 @@ namespace Whisperer.Controllers
     public class ListenController : ApiController
     {
         private readonly IPostBackService _service;
-        public ListenController()
+        public ListenController(IPostBackService service)
         {
-            _service = StructuremapMvc.StructureMapDependencyScope.Container.GetInstance<IPostBackService>();
+            _service = service;
         }
         public async Task<CustomOutgoingPostData> Post([FromBody]IncomingPostData data)
         {
