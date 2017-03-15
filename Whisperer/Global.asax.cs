@@ -40,8 +40,14 @@ namespace Whisperer
             var service = StructuremapMvc.StructureMapDependencyScope.Container.GetInstance<IService<ConfigurationModel>>();
             var config = LoadConfigJson();
 
-            config.Id = service.GetAll().OrderBy(x => x.Id).First().Id;
-            service.Update(config);
+            var dbConfig = service.GetAll().OrderBy(x => x.Id).FirstOrDefault();
+            if (dbConfig != null)
+            {
+                config.Id = dbConfig.Id;
+                service.Update(config);
+            }
+            else
+                service.Add(config);
         }
 
         private ConfigurationModel LoadConfigJson()
@@ -82,7 +88,7 @@ namespace Whisperer
             using (var r = new StreamReader(Server.MapPath("~/App_Data/questions.json")))
             {
                 var json = r.ReadToEnd();
-                return JsonConvert.DeserializeObject<List<Question>>(json, new  JsonSerializerSettings() {Culture = CultureInfo.InvariantCulture});
+                return JsonConvert.DeserializeObject<List<Question>>(json, new JsonSerializerSettings() { Culture = CultureInfo.InvariantCulture });
             }
         }
 
